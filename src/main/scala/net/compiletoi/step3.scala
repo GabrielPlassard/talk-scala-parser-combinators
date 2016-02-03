@@ -8,10 +8,10 @@ case class Sum(left: Expression, right: Expression) extends Expression
 case class Product(left: Expression, right: Expression) extends Expression
 
 object ExpressionParser extends RegexParsers {
-  def lit = ???
-  def sum = ???
-  def product = ???
-  def expr: Parser[Expression] = ???
+  def lit = """\d+""".r ^^ {i => Literal(i.toInt)}
+  def sum = "(" ~> (expr <~ "+") ~ expr <~ ")" ^^ { case l ~ r => Sum(l, r)}
+  def product = "(" ~> (expr <~ "*") ~ expr <~ ")" ^^ { case l ~ r => Product(l, r)}
+  def expr: Parser[Expression] = lit | sum | product
 
 
   def apply(input: String): ParseResult[Expression] = parseAll(expr, input)
